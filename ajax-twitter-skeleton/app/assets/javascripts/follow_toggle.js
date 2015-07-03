@@ -1,7 +1,7 @@
 $.FollowToggle = function (el) {
   this.$el = $(el);
   this.userId = this.$el.data("user-id");
-  this.followState = this.$el.data("initial-follow-state") ? "followed" : "unfollowed";
+  this.followState = this.$el.data("initial-follow-state");
 
   this.render();
   this.$el.on("click", this.handleClick.bind(this));
@@ -17,12 +17,11 @@ $.FollowToggle.prototype.render = function () {
 
   if (this.followState !== "unfollowed") {
     followText = "Unfollow!";
-    this.$el.data("initial-follow-state", true);
   } else if (this.followState !== "followed"){
     followText = "Follow!";
-    this.$el.data("initial-follow-state", false);
-  };
+  }
 
+  this.$el.prop("disabled", false);
   this.$el.text(followText);
 };
 
@@ -31,7 +30,6 @@ $.FollowToggle.prototype.handleClick = function () {
   var $follow = $(event.currentTarget);
   var followMethod;
   var holder;
-
 
   if (this.followState === "followed") {
      followMethod = "delete";
@@ -43,14 +41,14 @@ $.FollowToggle.prototype.handleClick = function () {
      holder = "followed";
    };
 
+  this.render();
+
   $.ajax({
     method: followMethod,
     url: "/users/" + this.userId + "/follow",
     dataType: "json",
     success: function () {
-      this.render();
       this.followState = holder;
-      this.$el.prop("disabled", false);
       this.render();
     }.bind(this)
   });
