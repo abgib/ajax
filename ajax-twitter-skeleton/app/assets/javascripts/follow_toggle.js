@@ -27,7 +27,6 @@ $.FollowToggle.prototype.render = function () {
 
 $.FollowToggle.prototype.handleClick = function () {
   event.preventDefault();
-  var $follow = $(event.currentTarget);
   var followMethod;
   var holder;
 
